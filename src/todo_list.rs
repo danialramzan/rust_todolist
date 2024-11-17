@@ -19,18 +19,18 @@ impl ToDoList {
         &self.tasks
     }
 
-    // Setter for tasks (replaces the entire tasks map)
     pub fn set_tasks(&mut self, new_tasks: HashMap<u32, String>) {
         self.tasks = new_tasks;
     }
-    //
-    // pub fn add_task(&mut self, description: String) {
-    //     self.tasks.insert(self.task_number, description);
-    //     println!("Task {} added.", self.task_number);
-    //     self.task_number += 1;
-    // }
 
+    pub fn add_edit_task(&mut self, key: u32, value: String) {
+        self.tasks.insert(key, value);
+    }
 
+    pub fn remove_task(&mut self, key: u32) {
+        self.tasks.remove(&key);
+    }
+}
 
 
 

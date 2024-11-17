@@ -37,22 +37,6 @@ impl<'a> ToDoListWrapper<'a> {
         }
     }
 
-
-    // let mut input = String::new();
-        // print!("Enter a description for the new task: ");
-        // io::stdout().flush().expect("Failed to flush output"); // Ensures the prompt is displayed before user input
-        //
-        // io::stdin()
-        //     .read_line(&mut input)
-        //     .expect("Failed to read input");
-        //
-        // let description = input.trim().to_string();
-        // if !description.is_empty() {
-        //     self.todo_list.add_task(description);
-        //     println!("Task added successfully!");
-        // } else {
-        //     println!("Task description cannot be empty.");
-        // }
     pub fn add(&mut self) {
         // let mut input = String::new();
         // print!("Enter a description for the new task: ");

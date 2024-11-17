@@ -30,9 +30,6 @@ impl ToDoList {
     pub fn remove_task(&mut self, key: u32) {
         self.tasks.remove(&key);
     }
-}
-
-
 
 
 }

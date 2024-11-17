@@ -14,6 +14,12 @@ impl ToDoList {
             task_number: 1,
         }
     }
+    //
+    // pub fn add_task(&mut self, description: String) {
+    //     self.tasks.insert(self.task_number, description);
+    //     println!("Task {} added.", self.task_number);
+    //     self.task_number += 1;
+    // }
 
 
 

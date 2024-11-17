@@ -1,5 +1,6 @@
 use super::todo_list::ToDoList;
-use std::io;
+use std::{io, process};
+use std::io::Write;
 
 pub struct ToDoListWrapper<'a> {
     todo_list: &'a mut ToDoList,
@@ -22,9 +23,18 @@ impl<'a> ToDoListWrapper<'a> {
                 println!("{}: {}", task_index, task);
             }
         }
-        crate::prompt(self);
-
-
+        let mut input = String::new();
+        while !["y", "n", "Y", "N"].contains(&input.trim()) {
+            print!("Would you like to go back to the main menu? (y/n): ");
+            io::stdout().flush().expect("Failed to flush stdout");
+            input.clear();
+            io::stdin().read_line(&mut input).expect("Unrecoverable Error Encountered!");
+        }
+        if input.trim().eq_ignore_ascii_case("y") {
+            crate::prompt(self);
+        } else {
+            process::exit(0);
+        }
     }
 
 

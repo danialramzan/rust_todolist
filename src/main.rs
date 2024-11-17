@@ -2,6 +2,9 @@ mod todo_list;
 mod todo_list_wrapper;
 
 use std::io;
+use std::io::Write;
+use std::process;
+use crate::todo_list_wrapper::ToDoListWrapper;
 
 fn main() {
 
@@ -20,19 +23,22 @@ fn main() {
 
     // panic!("at the disco");
 
+    println!("\nWelcome to my to-do app!");
+    prompt(&mut wrapper);
+}
 
-    println!("Welcome to my to-do app");
-    println!("Please enter a number to make a section:");
-    println!("  (1) List current tasks");
-    println!("  (2) Add task");
-    println!("  (3) Remove task");
-    println!("  (4) Edit task");
-
+pub fn prompt(wrapper: &mut ToDoListWrapper) {
     let mut number = -1;
 
-    while (![1, 2, 3, 4].contains(&number)) {
+    while (![1, 2, 3, 4, 5].contains(&number)) {
+        println!("\n  (1) List current tasks");
+        println!("  (2) Add task");
+        println!("  (3) Remove task");
+        println!("  (4) Edit task");
+        println!("  (5) Exit program");
         let mut input = String::new();
-        println!("Please input a number from 1-4 inclusive: ");
+        print!("\nPlease input a number from 1-5 inclusive to make a selection: ");
+        io::stdout().flush().expect("Failed to flush stdout");
         io::stdin().read_line(&mut input).expect("Unrecoverable Error Encountered!");
 
         number = match input.trim().parse() {
@@ -49,6 +55,7 @@ fn main() {
         2 => wrapper.add(),
         3 => wrapper.remove(),
         4 => wrapper.edit(),
+        5 => process::exit(0),
         _ => {}
     }
 }

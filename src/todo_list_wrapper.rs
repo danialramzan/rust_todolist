@@ -14,7 +14,21 @@ impl<'a> ToDoListWrapper<'a> {
     // list function
 
     pub fn list(&mut self) {
-        // let mut input = String::new();
+        let map = self.todo_list.get_tasks();
+        if (map.len() == 0) {
+            println!("No tasks found");
+        } else {
+            for (task_index, task) in map.iter() {
+                println!("{}: {}", task_index, task);
+            }
+        }
+        crate::prompt(self);
+
+
+    }
+
+
+    // let mut input = String::new();
         // print!("Enter a description for the new task: ");
         // io::stdout().flush().expect("Failed to flush output"); // Ensures the prompt is displayed before user input
         //
@@ -29,7 +43,6 @@ impl<'a> ToDoListWrapper<'a> {
         // } else {
         //     println!("Task description cannot be empty.");
         // }
-    }
     pub fn add(&mut self) {
         // let mut input = String::new();
         // print!("Enter a description for the new task: ");

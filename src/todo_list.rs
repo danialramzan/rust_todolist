@@ -14,6 +14,15 @@ impl ToDoList {
             task_number: 1,
         }
     }
+
+    pub fn get_tasks(&self) -> &HashMap<u32, String> {
+        &self.tasks
+    }
+
+    // Setter for tasks (replaces the entire tasks map)
+    pub fn set_tasks(&mut self, new_tasks: HashMap<u32, String>) {
+        self.tasks = new_tasks;
+    }
     //
     // pub fn add_task(&mut self, description: String) {
     //     self.tasks.insert(self.task_number, description);

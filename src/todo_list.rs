@@ -1,7 +1,7 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 pub struct ToDoList {
-    tasks: HashMap<u32, String>,
+    tasks: BTreeMap<u32, String>,
     task_number: u32
 }
 
@@ -10,17 +10,26 @@ impl ToDoList {
     // constructor
     pub fn new() -> Self {
         ToDoList {
-            tasks: HashMap::new(),
+            tasks: BTreeMap::new(),
             task_number: 1,
         }
     }
 
-    pub fn get_tasks(&self) -> &HashMap<u32, String> {
+    pub fn get_tasks(&self) -> &BTreeMap<u32, String> {
         &self.tasks
     }
 
-    pub fn set_tasks(&mut self, new_tasks: HashMap<u32, String>) {
+    pub fn get_task_number(&self) -> u32 {
+        self.task_number
+    }
+
+
+    pub fn set_tasks(&mut self, new_tasks: BTreeMap<u32, String>) {
         self.tasks = new_tasks;
+    }
+
+    pub fn set_task_number(&mut self, value: u32) {
+        self.task_number = value;
     }
 
     pub fn add_edit_task(&mut self, key: u32, value: String) {

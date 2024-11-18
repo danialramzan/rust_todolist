@@ -90,12 +90,43 @@ impl<'a> ToDoListWrapper<'a> {
 
     pub fn edit(&mut self) {
 
+        // remove code
 
+        // technically this should not fail for the first 2,147,483,647 items methinks
+        let mut input = String::new();
+        let mut number:i32 = 0;
+        while !self.todo_list.get_tasks().contains_key(&(number as u32)) {
 
+            print!("Please enter a valid index to edit or enter -1 to go back to main menu: ");
+            io::stdout().flush().expect("Failed to flush stdout");
+            input.clear();
+            io::stdin().read_line(&mut input).expect("Unrecoverable Error Encountered!");
 
+            number = match input.trim().parse() {
+                Ok(num) => num,
+                Err(_) => continue
+            };
 
+            if (number == -1) {
+                crate::prompt(self);
+            }
+        }
+
+        let mut input2 = String::new();
+
+        while input2.trim().to_string().is_empty() {
+            print!("Enter a non-empty description for task with index {}: ", number);
+            io::stdout().flush().expect("Failed to flush stdout");
+            input2.clear();
+            io::stdin().read_line(&mut input2).expect("Unrecoverable Error Encountered!");
+        }
+        let description = input2.trim().to_string();
+        self.todo_list.add_edit_task(number as u32, description);
+
+        println!("Task edited successfully!");
 
         self.prompt_main_menu();
+
     }
 
 }

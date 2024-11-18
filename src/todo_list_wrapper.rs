@@ -62,41 +62,40 @@ impl<'a> ToDoListWrapper<'a> {
     }
 
     pub fn remove(&mut self) {
-        // let mut input = String::new();
-        // print!("Enter a description for the new task: ");
-        // io::stdout().flush().expect("Failed to flush output"); // Ensures the prompt is displayed before user input
-        //
-        // io::stdin()
-        //     .read_line(&mut input)
-        //     .expect("Failed to read input");
-        //
-        // let description = input.trim().to_string();
-        // if !description.is_empty() {
-        //     self.todo_list.add_task(description);
-        //     println!("Task added successfully!");
-        // } else {
-        //     println!("Task description cannot be empty.");
-        // }
+
+        // technically this should not fail for the first 2,147,483,647 items methinks
+        let mut input = String::new();
+        let mut number:i32 = 0;
+        while !self.todo_list.get_tasks().contains_key(&(number as u32)) {
+
+            print!("Please enter a valid index to remove or enter -1 to go back to main menu: ");
+            io::stdout().flush().expect("Failed to flush stdout");
+            input.clear();
+            io::stdin().read_line(&mut input).expect("Unrecoverable Error Encountered!");
+
+            number = match input.trim().parse() {
+                Ok(num) => num,
+                Err(_) => continue
+            };
+
+            if (number == -1) {
+                crate::prompt(self);
+            }
+        }
+
+        self.todo_list.remove_task(number as u32);
+        println!("Task removed successfully!");
+        self.prompt_main_menu();
     }
 
     pub fn edit(&mut self) {
-        // let mut input = String::new();
-        // print!("Enter a description for the new task: ");
-        // io::stdout().flush().expect("Failed to flush output"); // Ensures the prompt is displayed before user input
-        //
-        // io::stdin()
-        //     .read_line(&mut input)
-        //     .expect("Failed to read input");
-        //
-        // let description = input.trim().to_string();
-        // if !description.is_empty() {
-        //     self.todo_list.add_task(description);
-        //     println!("Task added successfully!");
-        // } else {
-        //     println!("Task description cannot be empty.");
-        // }
+
+
+
+
+
+
+        self.prompt_main_menu();
     }
 
-
-    // Methods for TodoListWrapper can go here
 }

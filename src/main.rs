@@ -35,9 +35,11 @@ pub fn prompt(wrapper: &mut ToDoListWrapper) {
         println!("  (2) Add task");
         println!("  (3) Remove task");
         println!("  (4) Edit task");
-        println!("  (5) Exit program");
+        println!("  (5) Load");
+        println!("  (6) Save");
+        println!("  (7) Exit program");
         let mut input = String::new();
-        print!("\nPlease input a number from 1-5 inclusive to make a selection: ");
+        print!("\nPlease input a number from 1-7 inclusive to make a selection: ");
         io::stdout().flush().expect("Failed to flush stdout");
         io::stdin().read_line(&mut input).expect("Unrecoverable Error Encountered!");
 
@@ -55,7 +57,9 @@ pub fn prompt(wrapper: &mut ToDoListWrapper) {
         2 => wrapper.add(),
         3 => wrapper.remove(),
         4 => wrapper.edit(),
-        5 => process::exit(0),
+        5 => wrapper.load(),
+        6 => wrapper.save(),
+        7 => process::exit(0),
         _ => {}
     }
 }

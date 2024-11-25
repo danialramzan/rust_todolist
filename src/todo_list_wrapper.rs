@@ -1,6 +1,8 @@
 use super::todo_list::ToDoList;
 use std::{io, process};
 use std::io::Write;
+use std::fs::File;
+use serde_json;
 
 pub struct ToDoListWrapper<'a> {
     todo_list: &'a mut ToDoList,
@@ -128,5 +130,28 @@ impl<'a> ToDoListWrapper<'a> {
         self.prompt_main_menu();
 
     }
+
+    pub fn load(&mut self) {
+
+        // check if json is empty
+        // if empty say no load options available
+        // else show list and let them select
+        // call load in todo_list (replaces current btreelist with contents of json)
+
+
+    }
+
+    pub fn save(&mut self) {
+
+        if (self.todo_list.get_tasks().iter().len() == 0) {
+            println!("No tasks found to save!");
+        } else{
+            let slot_num = self.todo_list.save();
+            println!("Saved successfully in slot{}!", slot_num);
+        }
+
+        self.prompt_main_menu();
+    }
+
 
 }

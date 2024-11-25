@@ -40,5 +40,19 @@ impl ToDoList {
         self.tasks.remove(&key);
     }
 
+    pub fn save(&mut self) -> u32 {
 
-}
+        for (task_index, task) in self.get_tasks().iter() {
+            // add task_index, task to save file
+            println!("{}: {}", task_index, task);
+            }
+        return 3;
+        }
+
+        // save all entries and their indexes into json file
+        // save and return slot number
+
+    }
+
+
+

@@ -135,11 +135,22 @@ impl<'a> ToDoListWrapper<'a> {
 
         // check if json is empty
         // if empty say no load options available
+
         // else show list and let them select
         // call load in todo_list (replaces current btreelist with contents of json)
 
 
+        if std::fs::metadata("data/save_file.json").map(|m| m.len()).unwrap_or(0) == 0 {
+            println!("No saves found to load from!");
+        } else {
+            self.todo_list.load();
+        }
+
+        self.prompt_main_menu();
     }
+
+
+
 
     pub fn save(&mut self) {
 

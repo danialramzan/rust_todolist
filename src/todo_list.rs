@@ -1,7 +1,10 @@
 use std::collections::BTreeMap;
+use std::io;
 use chrono::Local; // For timestamp generation
 use serde::{Deserialize, Serialize}; // For serialization
 use std::io::{Read, Write};
+use std::iter::Map;
+use std::slice::Iter;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ToDoList {
@@ -50,6 +53,58 @@ impl ToDoList {
     pub fn remove_task(&mut self, key: u32) {
         self.tasks.remove(&key);
     }
+
+    pub fn load(&mut self) -> Vec<SaveSlot> {
+
+        let file_path = "data/save_file.json";
+        let mut save_file: Vec<SaveSlot> = Vec::new();
+
+        // load the json data
+        let mut content = String::new();
+        if let Ok(mut file) = std::fs::File::open(file_path) {
+            if let Ok(_) = file.read_to_string(&mut content) {
+                if let Ok(data) = serde_json::from_str(&content) {
+                    save_file = data;
+                }
+            }
+        }
+
+        let indexes: Vec<u32> = save_file.iter().map(|slot| slot.id).collect();
+        let mut input = String::new();
+        let mut number:i32 = 0; // this deviates from convention a bit...
+
+
+        while (!indexes.contains(&(number as u32))) {
+            println!("Enter the index for the save slot you would like to load. Enter -1 to go back.");
+            println!("Available save slots:\n");
+            for slot in &save_file {
+                println!("Slot ID: {}, Timestamp: {}", slot.id, slot.timestamp);
+            }
+
+            io::stdout().flush().expect("Failed to flush stdout");
+            io::stdin().read_line(&mut input).expect("Unrecoverable Error Encountered!");
+
+            number = match input.trim().parse() {
+                Ok(num) => {
+                    if num == -1 {
+                        crate::prompt(self); // Call `prompt` and exit the current function
+                    }
+                    num
+                }
+                Err(_) => continue,
+            };
+
+
+
+
+
+        }
+
+
+        return save_file
+
+
+        }
 
     pub fn save(&mut self) -> i32 {
 
@@ -107,7 +162,7 @@ impl ToDoList {
         };
 
         return (max_slot_id + 1) as i32;
-        }
+    }
     }
 
 

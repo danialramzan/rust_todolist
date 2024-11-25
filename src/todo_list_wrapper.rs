@@ -1,6 +1,8 @@
-use super::todo_list::ToDoList;
+use crate::save_slot::SaveSlot;
+use super::todo_list::{ToDoList};
 use std::{io, process};
 use std::io::Write;
+use std::io::Read;
 use std::fs::File;
 use serde_json;
 
@@ -143,13 +145,36 @@ impl<'a> ToDoListWrapper<'a> {
         if std::fs::metadata("data/save_file.json").map(|m| m.len()).unwrap_or(0) == 0 {
             println!("No saves found to load from!");
         } else {
-            self.todo_list.load();
+            let number = self.todo_list.load();
+            // do things
+
+            let file_path = "data/save_file.json";
+            let mut save_file: Vec<SaveSlot> = Vec::new();
+
+            // load the json data
+            let mut content = String::new();
+            if let Ok(mut file) = std::fs::File::open(file_path) {
+                if let Ok(_) = file.read_to_string(&mut content) {
+                    if let Ok(data) = serde_json::from_str(&content) {
+                        save_file = data;
+                    }
+                }
+            }
+
+            let slot = save_file.iter().find(|slot| slot.get_id() == number as u32).unwrap();
+
+
+
+
+            self.todo_list.set_tasks(slot.get_to_do_list().get_tasks().clone());
+            self.todo_list.set_task_number(slot.get_to_do_list().get_task_number());
+
+
+            println!("Successfully loaded data from slot {}", number);
         }
 
         self.prompt_main_menu();
     }
-
-
 
 
     pub fn save(&mut self) {

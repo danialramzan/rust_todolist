@@ -1,3 +1,4 @@
+use crate::ToDoListWrapper;
 use std::collections::BTreeMap;
 use std::io;
 use chrono::Local; // For timestamp generation
@@ -5,6 +6,7 @@ use serde::{Deserialize, Serialize}; // For serialization
 use std::io::{Read, Write};
 use std::iter::Map;
 use std::slice::Iter;
+use crate::save_slot::SaveSlot;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ToDoList {
@@ -12,12 +14,12 @@ pub struct ToDoList {
     task_number: u32
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct SaveSlot {
-    id: u32,
-    to_do_list: ToDoList,
-    timestamp: String,
-}
+// #[derive(Serialize, Deserialize, Debug)]
+// pub struct SaveSlot {
+//     id: u32,
+//     to_do_list: ToDoList,
+//     timestamp: String,
+// }
 
 impl ToDoList {
 
@@ -54,7 +56,7 @@ impl ToDoList {
         self.tasks.remove(&key);
     }
 
-    pub fn load(&mut self) -> Vec<SaveSlot> {
+    pub fn load(&mut self) -> i32 {
 
         let file_path = "data/save_file.json";
         let mut save_file: Vec<SaveSlot> = Vec::new();
@@ -69,7 +71,7 @@ impl ToDoList {
             }
         }
 
-        let indexes: Vec<u32> = save_file.iter().map(|slot| slot.id).collect();
+        let indexes: Vec<u32> = save_file.iter().map(|slot| slot.get_id()).collect();
         let mut input = String::new();
         let mut number:i32 = 0; // this deviates from convention a bit...
 
@@ -78,7 +80,7 @@ impl ToDoList {
             println!("Enter the index for the save slot you would like to load. Enter -1 to go back.");
             println!("Available save slots:\n");
             for slot in &save_file {
-                println!("Slot ID: {}, Timestamp: {}", slot.id, slot.timestamp);
+                println!("Slot ID: {}, Timestamp: {}", slot.get_id(), slot.get_timestamp());
             }
 
             io::stdout().flush().expect("Failed to flush stdout");
@@ -87,7 +89,7 @@ impl ToDoList {
             number = match input.trim().parse() {
                 Ok(num) => {
                     if num == -1 {
-                        crate::prompt(self); // Call `prompt` and exit the current function
+                        crate::prompt(&mut ToDoListWrapper::new(self)); // Call `prompt` and exit the current function
                     }
                     num
                 }
@@ -95,13 +97,11 @@ impl ToDoList {
             };
 
 
-
-
-
         }
 
+        // number is valid
 
-        return save_file
+        return number;
 
 
         }
@@ -123,14 +123,10 @@ impl ToDoList {
         }
 
         // get curr max slot id by iter trough json data
-        let max_slot_id = save_file.iter().map(|slot| slot.id).max().unwrap_or_else(|| 1);
+        let max_slot_id = save_file.iter().map(|slot| slot.get_id()).max().unwrap_or_else(|| 1);
 
         // make max slot
-        let new_slot = SaveSlot {
-            id: max_slot_id + 1,
-            to_do_list: self.clone(),
-            timestamp : Local::now().to_rfc3339(),
-        };
+        let new_slot = SaveSlot::new(max_slot_id + 1, self.clone(), Local::now().to_rfc3339());
 
         // add the new slot to the loaded json data
         save_file.push(new_slot);

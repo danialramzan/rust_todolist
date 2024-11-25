@@ -8,6 +8,7 @@
 - **List Tasks:** Displays all the tasks in the list, showing their indices and descriptions.
 - **Remove Task:** Enables the user to remove a task by specifying its index.
 - **Edit Task:** Allows access to the underlying data structure to edit a task.
+- **Data Persistence:** Lets you save and load your to-do list from a json file.
 
 ## Getting Started
 

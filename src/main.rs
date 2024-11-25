@@ -1,6 +1,6 @@
 mod todo_list;
 mod todo_list_wrapper;
-pub mod save_slot;
+mod save_slot;
 
 use std::io;
 use std::io::Write;

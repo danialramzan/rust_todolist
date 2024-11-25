@@ -1,8 +1,19 @@
 use std::collections::BTreeMap;
+use chrono::Local; // For timestamp generation
+use serde::{Deserialize, Serialize}; // For serialization
+use std::io::{Read, Write};
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ToDoList {
     tasks: BTreeMap<u32, String>,
     task_number: u32
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct SaveSlot {
+    id: u32,
+    to_do_list: ToDoList,
+    timestamp: String,
 }
 
 impl ToDoList {
@@ -40,18 +51,63 @@ impl ToDoList {
         self.tasks.remove(&key);
     }
 
-    pub fn save(&mut self) -> u32 {
+    pub fn save(&mut self) -> i32 {
 
-        for (task_index, task) in self.get_tasks().iter() {
-            // add task_index, task to save file
-            println!("{}: {}", task_index, task);
+        let file_path = "data/save_file.json";
+        let mut save_file: Vec<SaveSlot> = Vec::new();
+
+        // load the json data
+        let mut content = String::new();
+        if let Ok(mut file) = std::fs::File::open(file_path) {
+            if let Ok(_) = file.read_to_string(&mut content) {
+                if let Ok(data) = serde_json::from_str(&content) {
+                    save_file = data;
+                }
+
             }
-        return 3;
         }
 
-        // save all entries and their indexes into json file
-        // save and return slot number
+        // get curr max slot id by iter trough json data
+        let max_slot_id = save_file.iter().map(|slot| slot.id).max().unwrap_or_else(|| 1);
 
+        // make max slot
+        let new_slot = SaveSlot {
+            id: max_slot_id + 1,
+            to_do_list: self.clone(),
+            timestamp : Local::now().to_rfc3339(),
+        };
+
+        // add the new slot to the loaded json data
+        save_file.push(new_slot);
+
+        // save save save
+        let json_data = match serde_json::to_string_pretty(&save_file) {
+            Ok(json) => json,
+            Err(_) => {
+                return -1;
+            }
+        };
+
+        // boilerplate
+        if let Err(_) = std::fs::OpenOptions::new()
+            .write(true)
+            .truncate(true)
+            .open(file_path)
+            .and_then(|mut file| file.write_all(json_data.as_bytes()))
+        {
+            return -1;
+        }
+
+
+        let json_data = match serde_json::to_string_pretty(&self.tasks) {
+            Ok(json) => json,
+            Err(_) => {
+                return -1;
+            }
+        };
+
+        return (max_slot_id + 1) as i32;
+        }
     }
 
 

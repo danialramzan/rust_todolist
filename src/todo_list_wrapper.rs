@@ -147,7 +147,11 @@ impl<'a> ToDoListWrapper<'a> {
             println!("No tasks found to save!");
         } else{
             let slot_num = self.todo_list.save();
-            println!("Saved successfully in slot{}!", slot_num);
+            if (slot_num == -1) {
+                    println!("Error while saving!");
+            } else {
+                println!("Saved successfully in slot {}!", slot_num);
+            }
         }
 
         self.prompt_main_menu();

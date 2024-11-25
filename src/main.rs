@@ -30,7 +30,7 @@ fn main() {
 pub fn prompt(wrapper: &mut ToDoListWrapper) {
     let mut number = -1;
 
-    while (![1, 2, 3, 4, 5].contains(&number)) {
+    while (![1, 2, 3, 4, 5, 6, 7].contains(&number)) {
         println!("\n  (1) List current tasks");
         println!("  (2) Add task");
         println!("  (3) Remove task");

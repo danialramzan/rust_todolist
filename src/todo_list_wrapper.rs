@@ -20,6 +20,11 @@ impl<'a> ToDoListWrapper<'a> {
 
     pub fn list(&mut self) {
         // uses getter
+        self.view_tasks();
+        self.prompt_main_menu();
+    }
+
+    pub fn view_tasks(&mut self) {
         let map = self.todo_list.get_tasks();
         if (map.len() == 0) {
             println!("No tasks found");
@@ -28,10 +33,9 @@ impl<'a> ToDoListWrapper<'a> {
                 println!("{}: {}", task_index, task);
             }
         }
-        self.prompt_main_menu();
     }
 
-    fn prompt_main_menu(&mut self) {
+    pub fn prompt_main_menu(&mut self) {
         let mut input = String::new();
         while !["y", "n", "Y", "N"].contains(&input.trim()) {
             print!("Would you like to go back to the main menu? (y/n): ");
@@ -66,11 +70,17 @@ impl<'a> ToDoListWrapper<'a> {
     }
 
     pub fn remove(&mut self) {
-
         // technically this should not fail for the first 2,147,483,647 items methinks
         let mut input = String::new();
         let mut number:i32 = 0;
         while !self.todo_list.get_tasks().contains_key(&(number as u32)) {
+            if !self.todo_list.is_empty() {
+                println!("\nCurrent contents of To-Do List: ");
+            }
+            self.view_tasks();
+            if self.todo_list.is_empty() {
+                self.prompt_main_menu()
+            }
 
             print!("Please enter a valid index to remove or enter -1 to go back to main menu: ");
             io::stdout().flush().expect("Failed to flush stdout");
@@ -89,6 +99,7 @@ impl<'a> ToDoListWrapper<'a> {
 
         self.todo_list.remove_task(number as u32);
         println!("Task removed successfully!");
+        self.todo_list.reindex();
         self.prompt_main_menu();
     }
 

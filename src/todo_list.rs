@@ -49,7 +49,19 @@ impl ToDoList {
         self.tasks.remove(&key);
     }
 
-}
+    pub fn is_empty(&mut self) -> bool {
+        self.tasks.len() == 0
+    }
 
-
+    pub fn reindex(&mut self)  {
+        let temp_list = self.tasks.clone();
+        let mut new_btree_map:BTreeMap<u32, String> = BTreeMap::new();
+        let mut count = 1;
+        for (val, str) in temp_list {
+            new_btree_map.insert(count, str);
+            count += 1;
+            }
+        self.tasks = new_btree_map;
+        }
+    }
 
